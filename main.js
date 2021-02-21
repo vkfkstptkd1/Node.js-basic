@@ -1,18 +1,22 @@
 var http=require('http');
 var fs = require('fs');
+var url = require('url');//url이라는 모듈을 사용할 것임.
+
 var app = http.createServer(function(request,response){
-	var url = request.url;
-	if(request.url == '/')
+	var _url = request.url; 
+	// request.url 은 /?id=////가 들아감 즉, queryString이 들어감.
+	var queryData = url.parse(_url,true).query;
+	//queryData의 출력은 {id : ////} ////를 얻고싶다면queryData.id
+	if(_url == '/')
 	{
-	  url = '/index.html';
+	  _url = '/index.html';
 	}
-	if(request.url == '/favicon.ico'){
+	if(_url == '/favicon.ico'){
 	  return response.writeHead(404);
 	}
 	response.writeHead(200);
-	response.end(fs.readFileSync(__dirname+url));
-	//__dirname : 현재 파일이 위치한경로
-	//url : 사용자가 페이지에서 요청한 것에 대한 url ex) /1.html
-	//fs.readFileSync() : 괄호 안에 있는 경로의 파일을 가져와라
+	response.end(queryData.id); // 화면에는 queryData의 id만 출력됨.
 	});
 app.listen(3000);
+
+//querystring에 따라서 다른 정보를 출력할 수 있는 코드임.
