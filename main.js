@@ -16,30 +16,29 @@ var app = http.createServer(function(request,response){
 	  return response.writeHead(404);
 	}
 	response.writeHead(200);
-	var template=`
-	<!doctype html>
-	<html>
-	<head>
-	  <title>WEB1 - ${title}</title>
-	  <meta charset="utf-8">
-	</head>
-	<body>
-	  <h1><a href="/">WEB</a></h1>
-	  <ol>//여기 클릭했을 때 주소도 바꿔줘야함.
-	    <li><a href="/?=HTML">HTML</a></li>
-	    <li><a href="/?=CSS">CSS</a></li>
-	    <li><a href="/?=JavaScript">JavaScript</a></li>
-	  </ol>
-	  <h2>${title}</h2>
-	  <p><a href="https://www.w3.org/TR/html5/" target="_blank" title="html5 speicification">Hypertext Markup Language (HTML)</a> is the standard markup language for <strong>creating <u>web</u> pages</strong> and web applications.Web browsers receive HTML documents from a web server or from local storage and render them into multimedia web pages. HTML describes the structure of a web page semantically and originally included cues for the appearance of the document.
-	  <img src="coding.jpg" width="100%">
-	  </p><p style="margin-top:45px;">HTML elements are the building blocks of HTML pages. With HTML constructs, images and other objects, such as interactive forms, may be embedded into the rendered page. It provides a means to create structured documents by denoting structural semantics for text such as headings, paragraphs, lists, links, quotes and other items. HTML elements are delineated by tags, written using angle brackets.
-	  </p>
-	</body>
-	</html>`
-	response.end(queryData.id); // 화면에는 queryData의 id만 출력됨.
-	});
+	    fs.readFile(`data/${title}`,'utf8',function(err,description){//파일을 읽어오는 함수.
+		var template=`
+		<!doctype html>
+		<html>
+		<head>
+		  <title>WEB1 - ${title}</title>
+		  <meta charset="utf-8">
+		</head>
+		<body>
+		  <h1><a href="/">WEB</a></h1>
+		  <ol>//여기 클릭했을 때 주소도 바꿔줘야함.
+		    <li><a href="/?=HTML">HTML</a></li>
+		    <li><a href="/?=CSS">CSS</a></li>
+		    <li><a href="/?=JavaScript">JavaScript</a></li>
+		  </ol>
+		  <h2>${title}</h2>
+		  <p>${description}</p>//data에 내용에 따라서 본문이 달라짐.
+		</body>
+		</html>`
+		response.end(template); //이제 화면에는 변경된 template 출력.
+		});
+    	  });
 app.listen(3000);
 
-//만약 이걸 배우지 않았더라면 자료가 엄청나게 많을 때, 비슷하게 생긴 홈페이지에서 <ol>하나 바꾸려고 하는데 하나하나 다 바꿔야함.
-//사소한 변화를 한번에 해결 가능함. 
+//필요한 자료를 받아서 오면 우리가  본문을 길게 변경하지 않아도 하나의 변수와 함수만으로 해결 가능.
+//파일에 본문을 저장하고, node.js의 파일읽기기능(fs.readFile)을 이용해 본문 생성.
